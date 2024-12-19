@@ -1,0 +1,28 @@
+server:
+  port: 8084 # Gateway server port
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      routes:
+        - id: job-service
+          uri: lb://JOB-SERVICE  # Name of the job microservice in Eureka
+          predicates:
+            - Path=/jobs/**
+        - id: company-service
+          uri: lb://COMPANY-SERVICE  # Name of the company microservice
+          predicates:
+            - Path=/companies/**
+        - id: review-service
+          uri: lb://REVIEW-SERVICE  # Name of the review microservice
+          predicates:
+            - Path=/reviews/**
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true

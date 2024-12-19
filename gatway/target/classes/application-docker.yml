@@ -1,0 +1,28 @@
+server:
+  port: 8084 # Gateway server port
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      routes:
+        - id: job-service
+          uri: http://job:8082
+          predicates:
+            - Path=/jobs/**
+        - id: company-service
+          uri: http://company:8081
+          predicates:
+            - Path=/companies/**
+        - id: review-service
+          uri: http://review:8083
+          predicates:
+            - Path=/reviews/**
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://servicereg:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true

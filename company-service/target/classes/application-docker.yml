@@ -1,0 +1,67 @@
+job-service:
+  url: http://job:8082
+company-service:
+  url: http://company:8081
+review-service:
+  url: http://review:8083
+
+
+
+server:
+  port: 8081
+
+
+spring:
+  application:
+    name: company-service
+
+  datasource:
+    url: jdbc:postgresql://postgres:5432/company
+    username: balaji
+    password: balaji
+
+  jpa:
+    database: POSTGRESQL
+    hibernate:
+      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://servicereg:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+#zipkin
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    endpoint: http://zipkin:9411/api/v2/spans
+
+  #RabbitMQ
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    username: guest
+    password: guest
+
+
+#  h2:
+#    console:
+#      enabled: true
+#      path: /h2-console
+#
+#  datasource:
+#    url: jdbc:h2:mem:testdb
+#    driver-class-name: org.h2.Driver
+#    username: sa
+#    password:
+#
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#    database-platform: org.hibernate.dialect.H2Dialect

@@ -1,0 +1,93 @@
+job-service:
+  url: http://local:8082
+company-service:
+  url: http://local:8081
+review-service:
+  url: http://local:8083
+
+
+
+server:
+  port: 8082
+
+spring:
+  application:
+    name: job-service
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/job
+    username: balaji
+    password: balaji
+
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+    #config server
+
+  config:
+    import: optional:configserver:http://localhost:8080
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      companyBreaker:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        waitDurationInOpenState: 10s
+        failureRateThreshold: 50
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        slidingWindowType: COUNT_BASED
+
+        #Retry
+        max-attempts: 5
+        wait-duration: 2s
+
+        #RateLimit
+        timeout-duration: 0
+        limit-refresh-period: 4
+        limit-for-period: 2
+
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+  endpoint:
+    health:
+      show-details: always
+
+
+# h2:
+#   console:
+#     enabled: true
+#     path: /h2-console
+#
+#   datasource:
+#     url: jdbc:h2:mem:testdb
+#     driver-class-name: org.h2.Driver
+#     username: sa
+#     password:
+#
+#   jpa:
+#     hibernate:
+#       ddl-auto: update
+#     database-platform: org.hibernate.dialect.H2Dialect
