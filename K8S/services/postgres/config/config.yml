@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: db-config
+data:
+  COMPANY_DB: company
+  JOB_DB: job
+  REVIEW_DB: review
+
